@@ -5,6 +5,7 @@ OVERVIEW
 
 Nolate is a template system similar to erb that is designed for not consuming
 some huge amount of CPU without a good reason. It is written in pure Ruby.
+Nolate is distributed under a two clause BSD license for max freedom.
 
 Templates can include code inside <%= %> that is evaluated with eval() and
 substituted to the string.
@@ -12,6 +13,13 @@ substituted to the string.
 Also occurrences of <%#something%> are substituted with the value of the
 hash field :something of an additional hash passed to nolate() or nlt()
 functions.
+
+IS IT SUPER FAST?
+-----------------
+
+Fast enough that a small template substitution is not measurable by the
+apache benchmark against a sample Sinatra application.
+Surprisingly this is not as common as it should be.
 
 HOW TO USE IT?
 --------------
