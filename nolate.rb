@@ -31,39 +31,39 @@
 
 $nlt_templates = {}
 
-def nolate(template,sub={})
-    i = 0
-    l = template.length
-    result = ""
-    while i < l
+def nolate(__template,__sub={})
+    __i = 0
+    __l = __template.length
+    __result = ""
+    while __i < __l
         # Find start: <%
-        start = template.index("<%",i)
-        if !start
-            result << template[(i..-1)]
-            return result
+        __start = __template.index("<%",__i)
+        if !__start
+            __result << __template[(__i..-1)]
+            return __result
         end
         # Emit everything from the last index to the start as a plain string.
-        result << template[(i..(start-1))] if start != 0
+        __result << __template[(__i..(__start-1))] if __start != 0
         # Find stop: %>
-        i = start+2
-        stop = template.index("%>",i)
-        stop = l+1 if !stop # Implicit %> at end of string...
-        i = stop+2 # In the next iteration we start immediately after %>
-        inter = template[(start+3)..(stop-1)]
+        __i = __start+2
+        __stop = __template.index("%>",__i)
+        __stop = __l+1 if !__stop # Implicit %> at end of string...
+        __i = __stop+2 # In the next iteration we start immediately after %>
+        __inter = __template[(__start+3)..(__stop-1)]
         # Now we have the string to interpolate, <% ... %>
         # What we need to do is to check the first character to understand
         # The kind of interpolation to perform:
         # <%= ... %> means to eval the expression and substitute the result
         # <%#foo%>   means to substitute with sub[:foo]
-        if template[start+2] == 61
-            result << eval(inter).to_s
-        elsif template[start+2] == 35
-            result << sub[inter.to_s.to_sym].to_s
+        if __template[__start+2] == 61
+            __result << eval(__inter).to_s
+        elsif __template[__start+2] == 35
+            __result << __sub[__inter.to_s.to_sym].to_s
         else
-            raise "NOLATE template error near '#{template[(start)..(start+2)]}'"
+            raise "NOLATE template error near '#{__template[(__start)..(__start+2)]}'"
         end
     end
-    return result
+    return __result
 end
 
 def nlt(viewname,sub={})
