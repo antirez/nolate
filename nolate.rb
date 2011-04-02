@@ -52,7 +52,7 @@ def nolate(template,sub={})
         inter = template[(start+3)..(stop-1)]
         # Now we have the string to interpolate, <% ... %>
         # What we need to do is to check the first character to understand
-        # The kind of interpolaiton to perform:
+        # The kind of interpolation to perform:
         # <%= ... %> means to eval the expression and substitute the result
         # <%#foo%>   means to substitute with sub[:foo]
         if template[start+2] == 61
