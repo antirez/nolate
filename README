@@ -1,0 +1,50 @@
+Nolate - NO LAme TEmplate system
+
+OVERVIEW
+--------
+
+Nolate is a template system similar to erb that is designed for not consuming
+some huge amount of CPU without a good reason. It is written in pure Ruby.
+
+Templates can include code inside <%= %> that is evaluated with eval() and
+substituted to the string.
+
+Also occurrences of <%#something%> are substituted with the value of the
+hash field :something of an additional hash passed to nolate() or nlt()
+functions.
+
+HOW TO USE IT?
+--------------
+
+Nolate consists of just three functions. The first is nolate() that is the core
+of the template system:
+
+    nolate("The sum is <%= 2+2 %> Also substitute <%#myfield%> ok",
+           {:myfield => 10})
+
+The array is optional, if you don't have <%#%> style substitutions you can
+simply omit it.
+
+The second function is nlt(), and is used to also handle loading the template
+from a 'views' directory. The above example can be translated using nlt()
+just creating a file 'views/index.nlt' with the following content:
+
+The sum is <%= 2+2 %> Also substitute <%#myfield%> ok
+
+Then we can use nlt() calling:
+
+    nlt("index.nlt", {:myfield => "something"})
+
+the nlt() funciton will take care to cache templates into memory.
+In order to flush this templates to force reloading just call the third and
+final provided function:
+
+    nlt_flush_templates()
+
+CONTRIBUTE
+----------
+
+Please send me pull requests: http://github.com/antirez/nolate
+
+It is not too late...
+Salvatore
