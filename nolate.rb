@@ -55,9 +55,9 @@ def nolate(__template,__sub={})
         # The kind of interpolation to perform:
         # <%= ... %> means to eval the expression and substitute the result
         # <%#foo%>   means to substitute with sub[:foo]
-        if __template[__start+2] == 61
+        if __template[__start+2] == 61 or __template[__start+2] == '='
             __result << eval(__inter).to_s
-        elsif __template[__start+2] == 35
+        elsif __template[__start+2] == 35 or __template[__start+2] == '#'
             __result << __sub[__inter.to_s.to_sym].to_s
         else
             raise "NOLATE template error near '#{__template[(__start)..(__start+2)]}'"
