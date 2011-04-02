@@ -31,14 +31,14 @@
 
 $nlt_templates = {}
 
-def nolate_empty_biniding
+def nolate_empty_binding
     return binding()
 end
 
 def nolate(str, sub = {})
     str.gsub(/<%([=#])(.*?)%>/) do
         if $1 == "="
-            eval $2, nolate_binding, __FILE__, __LINE__
+            eval $2, nolate_empty_binding, __FILE__, __LINE__
         else
             sub[$2.to_sym]
         end
