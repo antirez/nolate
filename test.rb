@@ -7,5 +7,6 @@ class NolateTest < Test::Unit::TestCase
         assert_equal(nolate("nosub"),"nosub")
         assert_equal(nolate("simple <%= 'sub' %>"),"simple sub")
         assert_equal(nolate("hash sub <%#x%>",{:x => 1}),"hash sub 1")
+        assert_equal(nolate("just ev<%% 'sub' %>al"),"just eval")
     end
 end

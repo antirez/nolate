@@ -49,6 +49,14 @@ final provided function:
 
     nlt_flush_templates()
 
+SUPPORTED SUBSTITUTIONS
+-----------------------
+
+<%= somecode %>     Evaluates somecode and substitutes the return value.
+<%% somecode %>     Evaluates somecode but substitutes just ""
+<%#filed_name%>     Substituted the value of the specified filed of the hash
+                    passwd to nolate() or nlt() as optional argument.
+
 CONTRIBUTE
 ----------
 
