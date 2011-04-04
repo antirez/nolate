@@ -49,6 +49,12 @@ final provided function:
 
     nlt_flush_templates()
 
+It is possible to pass the template name as a symbol like in:
+
+    nlt(:index)
+
+nlt will add ".nlt" at the end of the name when it is a symbol.
+
 SUPPORTED SUBSTITUTIONS
 -----------------------
 
