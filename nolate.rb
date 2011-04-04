@@ -49,7 +49,7 @@ def nolate(str, sub = {})
 end
 
 def nlt(viewname,sub={})
-    viewname = viewname.to_s
+    viewname = viewname.to_s+".nlt" if viewname.is_a?(Symbol)
     if !$nlt_templates[viewname]
         filename = "views/"+viewname
         if !File.exists?(filename)
