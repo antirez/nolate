@@ -36,7 +36,7 @@ def nolate_empty_binding
 end
 
 def nolate(str, sub = {})
-    str.gsub(/<%([=#%])(.*?)%>/) do
+    str.gsub(/<%([=#%])(.*?)%>/m) do
         if $1 == "="
             eval $2, nolate_empty_binding, __FILE__, __LINE__
         elsif $1 == "%"
