@@ -29,7 +29,7 @@ Number <%= x %>
 </body></html>
 TEMPLATE
 
-TIMES = 10_000
+TIMES = 30_000
 
 bench("empty template"          , TIMES) { nolate("") }
 bench("small constant template" , TIMES) { nolate("nosub") }
