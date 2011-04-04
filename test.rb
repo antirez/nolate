@@ -15,28 +15,24 @@ end
 
 class NolateTest < Test::Unit::TestCase
     def test_basic
-        assert_equal(nolate(""),"")
-        assert_equal(nolate("nosub"),"nosub")
-        assert_equal(nolate("simple <%= 'sub' %>"),"simple sub")
-        assert_equal(nolate("hash sub <%#x%>",{:x => 1}),"hash sub 1")
-        assert_equal(nolate("just ev<% 'sub' %>al"),"just eval")
-        assert_equal(nlt(:testview),"test 4 view")
-        assert_equal(nlt("testview.nlt"),"test 4 view")
-        assert_equal(nlt(:testview2),"<html>\n<body>\n4\n</body>\n</html>")
-        assert_equal(nolate("<%x=2%><%=x+1%>"),"3")
-        assert_equal(MyExampleClass.new.method_one,"Hello")
-        assert_equal(MyExampleClass.new.method_two,"World")
+        assert_equal("",nolate(""))
+        assert_equal("nosub",nolate("nosub"))
+        assert_equal("simple sub",nolate("simple <%= 'sub' %>"))
+        assert_equal("hash sub 1",nolate("hash sub <%#x%>",{:x => 1}))
+        assert_equal("just eval",nolate("just ev<% 'sub' %>al"))
+        assert_equal("test 4 view",nlt(:testview))
+        assert_equal("test 4 view",nlt("testview.nlt"))
+        assert_equal("<html>\n<body>\n4</body>\n</html>",nlt(:testview2))
+        assert_equal("3",nolate("<%x=2%><%=x+1%>"))
+        assert_equal("Hello",MyExampleClass.new.method_one)
+        assert_equal("World",MyExampleClass.new.method_two)
     end
 
     def test_iter
         assert_equal(<<-OUTPUT, nlt(:testview4))
-
 Number 1
-
 Number 2
-
 Number 3
-
 Number 4
 OUTPUT
     end

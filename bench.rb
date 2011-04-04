@@ -29,11 +29,12 @@ Number <%= x %>
 </body></html>
 TEMPLATE
 
-TIMES = 30_000
+TIMES = 10_000
 
 bench("empty template"          , TIMES) { nolate("") }
 bench("small constant template" , TIMES) { nolate("nosub") }
 bench("simple substitution"     , TIMES) { nolate("simple <%= 'sub' %>") }
 bench("hash substitution"       , TIMES) { nolate("hash sub <%#x%>") }
 bench("testview2 file template" , TIMES) { nlt(:testview2) }
+bench("big template .nlt", TIMES) { @x = 1; nlt(:bigtemplate, :x => 1) }
 bench("big template (#{TEMPLATE.length} bytes)", TIMES) { @x = 1; nolate(TEMPLATE, :x => 1) }

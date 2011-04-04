@@ -47,7 +47,13 @@ def nlt_parse(str)
     i = -1  # I wish I had map.with_index in 1.8 :(
     str.split(/<%(.*?)%>/m).map do |s|
         i, first_char = i + 1, s[0..0]
-        if    i % 2 == 0        then [s.inspect]
+        if    i % 2 == 0
+            j = 0
+            if s != "\n" and s != "\r\n"
+                j += 1 if s[j..j] == "\r"
+                j += 1 if s[j..j] == "\n"
+            end
+            [s[j..-1].inspect]
         elsif first_char == "=" then [:evalo, s[1..-1]]
         elsif first_char == "#" then [:sub,   s[1..-1].to_sym]
         else                         [:eval,  s]
@@ -57,7 +63,7 @@ end
 
 def nlt_compile(template,sub)
     s = "__=[]\n"
-    template.each do |action, param|
+    nlt_parse(template).each do |action, param|
         case action
             when :evalo then s << "__<<(#{param}).to_s\n"
             when :eval  then s << "#{param}\n"
@@ -68,8 +74,8 @@ def nlt_compile(template,sub)
     s << "__.join"
 end
 
-def nlt_eval(template, sub = {})
-    eval(nlt_compile(template,sub), nlt_empty_binding(sub), __FILE__, __LINE__)
+def nlt_eval(code, sub = {})
+    eval(code, nlt_empty_binding(sub), __FILE__, __LINE__)
 end
 
 def nlt(viewname, sub={})
@@ -78,11 +84,11 @@ def nlt(viewname, sub={})
         filename = "views/#{viewname}"
         raise "NOLATE error: no template at #{filename}" \
             unless File.exists?(filename)
-        nlt_templates[viewname] = nlt_parse(File.read(filename).chomp)
+        nlt_templates[viewname] = nlt_compile(File.read(filename).chomp,sub)
     end
     nlt_eval(nlt_templates[viewname], sub)
 end
 
 def nolate(str, sub={})
-    nlt_eval(nlt_parse(str), sub)
+    nlt_eval(nlt_compile(str,sub), sub)
 end
