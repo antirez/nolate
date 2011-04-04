@@ -1,0 +1,51 @@
+<html>
+<body>
+Long template with all the features Yeah!. 2 + 2 is: <%= # 2+2 = 4
+2+2
+%>
+
+<%= @x %>
+
+<% @x %>
+
+<%#periquin%>
+
+<% (1..2).each{|x| %>
+Number <%= x %>
+<% } %>
+
+</body></html>
+<html>
+<body>
+Long template with all the features Yeah!. 2 + 2 is: <%= # 2+2 = 4
+2+2
+%>
+
+<%= @x %>
+
+<% @x %>
+
+<%#periquin%>
+
+<% (1..2).each{|x| %>
+Number <%= x %>
+<% } %>
+
+</body></html>
+<html>
+<body>
+Long template with all the features Yeah!. 2 + 2 is: <%= # 2+2 = 4
+2+2
+%>
+
+<%= @x %>
+
+<% @x %>
+
+<%#periquin%>
+
+<% (1..2).each{|x| %>
+Number <%= x %>
+<% } %>
+
+</body></html>
