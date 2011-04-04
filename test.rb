@@ -12,5 +12,6 @@ class NolateTest < Test::Unit::TestCase
         assert_equal(nlt("testview.nlt"),"test 4 view\n")
         assert_equal(nlt(:testview2),"<html>\n<body>\n4\n</body>\n</html>\n")
         assert_equal(nolate("<% foo %>"),"<% foo %>")
+        assert_equal(nolate("<%%x=2%><%=x+1%>"),"3")
     end
 end
