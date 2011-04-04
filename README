@@ -61,7 +61,7 @@ SUPPORTED SUBSTITUTIONS
 <%= somecode %>     Evaluates somecode and substitutes the return value.
 <% somecode %>      Evaluates somecode.
 <%#filed_name%>     Substituted the value of the specified filed of the hash
-                    passwd to nolate() or nlt() as optional argument.
+                    passed to nolate() or nlt() as optional argument.
 
 It is possible to interleave template and Ruby code together like in the
 following example:
