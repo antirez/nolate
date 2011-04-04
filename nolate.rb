@@ -30,7 +30,8 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 
-def nlt_empty_binding
+def nlt_empty_binding(sub)
+    __sub_ = sub
     return binding()
 end
 
@@ -54,20 +55,24 @@ def nlt_parse(str)
     end
 end
 
-def nlt_eval(template, sub = {}, b = nlt_empty_binding)
+def nlt_compile(template,sub)
     s = "__=[]\n"
     template.each do |action, param|
         case action
             when :evalo then s << "__<<(#{param}).to_s\n"
             when :eval  then s << "#{param}\n"
-            when :sub   then s << "__<<#{sub[param].to_s.inspect}\n"
+            when :sub   then s << "__<< __sub_[#{param.to_sym.inspect}]\n"
             else             s << "__<<#{action}\n"
         end
     end
-    eval(s << "__.join", b, __FILE__, __LINE__)
+    s << "__.join"
 end
 
-def nlt(viewname, sub={}, b = nlt_empty_binding)
+def nlt_eval(template, sub = {})
+    eval(nlt_compile(template,sub), nlt_empty_binding(sub), __FILE__, __LINE__)
+end
+
+def nlt(viewname, sub={})
     viewname = "#{viewname}.nlt" if viewname.is_a?(Symbol)
     unless nlt_templates[viewname]
         filename = "views/#{viewname}"
@@ -75,9 +80,9 @@ def nlt(viewname, sub={}, b = nlt_empty_binding)
             unless File.exists?(filename)
         nlt_templates[viewname] = nlt_parse(File.read(filename).chomp)
     end
-    nlt_eval(nlt_templates[viewname], sub, b)
+    nlt_eval(nlt_templates[viewname], sub)
 end
 
 def nolate(str, sub={})
-    nlt_eval(nlt_parse(str), sub, binding)
+    nlt_eval(nlt_parse(str), sub)
 end
