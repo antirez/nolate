@@ -35,58 +35,51 @@ def nolate_empty_binding
     return binding()
 end
 
-def nolate(__template,__sub={})
+def nolate_compile(__template,__sub={})
     __i = 0
     __l = __template.length
-    __result = ""
+    __result = '__nolate_html=""'+"\n"
     while __i < __l
         # Find start: <%
         __start = __template.index("<%",__i)
-        if !__start
-            __result << __template[(__i..-1)]
-            return __result
-        end
         # Emit everything from the last index to the start as a plain string.
-        __result << __template[(__i..(__start-1))] if __start != 0
+        if __start != 0 or !__start
+            __s = __start ? __start-1 : -1
+            __content = __template[(__i..__s)]
+            __content.chop! if __content[-1..-1] == "\n"
+            __content.chop! if __content[-1..-1] == "\r"
+            __result << "__nolate_html += "+__content.inspect+"\n"
+            break if !__start
+        end
         # Find stop: %>
         __i = __start+2
         __stop = __template.index("%>",__i)
         __stop = __l+1 if !__stop # Implicit %> at end of string...
         __i = __stop+2 # In the next iteration we start immediately after %>
-        __inter = __template[(__start+3)..(__stop-1)]
         # Now we have the string to interpolate, <% ... %>
         # What we need to do is to check the first character to understand
         # The kind of interpolation to perform:
         # <%= ... %> means to eval the expression and substitute the result
         # <%#foo%>   means to substitute with sub[:foo]
         if __template[__start+2] == 61 or __template[__start+2] == '='
-            __result << eval(__inter).to_s
-        elsif __template[__start+2] == 37 or __template[__start+2] == '%'
-            eval(__inter).to_s
+            __inter = __template[(__start+3)..(__stop-1)]
+            __result << "__nolate_html += (\n"+__inter+"\n).to_s\n"
         elsif __template[__start+2] == 35 or __template[__start+2] == '#'
-            __result << __sub[__inter.to_s.to_sym].to_s
+            __inter = __template[(__start+3)..(__stop-1)]
+            __result << "__nolate_html += __sub["+(__inter.to_sym.inspect)+"].to_s\n"
         else
-            __result << __template[__start..__stop+1]
+            __inter = __template[(__start+2)..(__stop-1)]
+            __result << __inter+"\n"
         end
     end
+    __result << '__nolate_html'+"\n"
     return __result
 end
 
-=begin
-def nolate(str, sub = {})
-    mybinding = nolate_empty_binding
-    str.gsub(/<%([=#%])(.*?)%>/m) do
-        if $1 == "="
-            eval $2, mybinding, __FILE__, __LINE__
-        elsif $1 == "%"
-            eval $2, mybinding, __FILE__, __LINE__
-            ""
-        else
-            sub[$2.to_sym]
-        end
-    end
+def nolate(__template,__sub={})
+    compiled = nolate_compile(__template,__sub)
+    return eval(compiled)
 end
-=end
 
 def nlt(viewname,sub={})
     viewname = viewname.to_s+".nlt" if viewname.is_a?(Symbol)
