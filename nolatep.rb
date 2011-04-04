@@ -46,35 +46,35 @@ module Nolatep
 
   def nlt_parse(str)
     i = -1  # I wish I had map.with_index in 1.8 :(
-    str.split(/<%([=#%].*?)%>/m).map do |s|
+    str.split(/<%(.*?)%>/m).map do |s|
       i, first_char = i + 1, s[0..0]
-      if    i % 2 == 0        then [s]
+      if    i % 2 == 0        then [s.inspect]
       elsif first_char == "=" then [:evalo, s[1..-1]]
-      elsif first_char == "%" then [:eval, s[1..-1]]
-      elsif first_char == "#" then [:sub,  s[1..-1].to_sym]
-      else
-        raise "Invalid template #{str.inspect}"
+      elsif first_char == "#" then [:sub,   s[1..-1].to_sym]
+      else                         [:eval,  s]
       end
     end
   end
 
   def nlt_eval(template, sub = {}, b = nlt_empty_binding)
-    template.map do |action, param|
+    s = "__=[]\n"
+    template.each do |action, param|
       case action
-      when :evalo then eval(param, b, __FILE__, __LINE__)
-      when :eval then eval(param, b, __FILE__, __LINE__); ""
-      when :sub  then sub[param]
-      else action
+      when :evalo then s << "__<<(#{param}).to_s\n"
+      when :eval  then s << "#{param}\n"
+      when :sub   then s << "__<<#{sub[param].to_s.inspect}\n"
+      else             s << "__<<#{action}\n"
       end
-    end.join
+    end
+    eval(s << "__.join", b, __FILE__, __LINE__)
   end
 
   def nlt(viewname, sub={}, b = nlt_empty_binding)
     viewname = "#{viewname}.nlt" if viewname.is_a?(Symbol)
     unless nlt_templates[viewname]
-      filename = "views/"+viewname
+      filename = "views/#{viewname}"
       raise "NOLATE error: no template at #{filename}" unless File.exists?(filename)
-      nlt_templates[viewname] = nlt_parse(File.open(filename).read)
+      nlt_templates[viewname] = nlt_parse(File.read(filename).chomp)
     end
     nlt_eval(nlt_templates[viewname], sub, b)
   end

@@ -7,19 +7,27 @@ def bench(descr, times)
     $template = ""
 end
 
-TEMPLATE = <<-TEMPLATE * 10
-<html><body>Long template with all the features Yeah!.<%= # 2+2 = 4
+TEMPLATE = <<-TEMPLATE * 3
+<html>
+<body>
+Long template with all the features Yeah!. 2 + 2 is: <%= # 2+2 = 4
 2+2
 %>
+
 <%= @x %>
-<%% @x %>
+
+<% @x %>
+
 <%#periquin%>
+
+<% (1..2).each{|x| %>
+Number <%= x %>
+<% } %>
+
 </body></html>
 TEMPLATE
 
-puts("Big template size: #{TEMPLATE.length} bytes")
-
-TIMES = 100_000
+TIMES = 30_000
 
 if ARGV[0] == "n"
     load 'nolate.rb'
@@ -29,15 +37,15 @@ if ARGV[0] == "n"
     bench("simple substitution"     , TIMES) { nolate("simple <%= 'sub' %>") }
     bench("hash substitution"       , TIMES) { nolate("hash sub <%#x%>") }
     bench("testview2 file template" , TIMES) { nlt(:testview2) }
-    bench("big template", TIMES) { @x = 1; nolate(TEMPLATE, :x => 1) }
+    bench("big template (#{TEMPLATE.length} bytes)", TIMES) { @x = 1; nolate(TEMPLATE, :x => 1) }
 else
     load 'nolatep.rb'
     include Nolatep
-    puts("\nnolatep")
+    puts("\nnolate with 'parser'")
     t = nlt_parse("")                    ; bench("empty template"          , TIMES) { nlt_eval(t) }
     t = nlt_parse("nosub")               ; bench("small constant template" , TIMES) { nlt_eval(t) }
     t = nlt_parse("simple <%= 'sub' %>") ; bench("simple substitution"     , TIMES) { nlt_eval(t) }
     t = nlt_parse("hash sub <%#x%>")     ; bench("hash substitution"       , TIMES) { nlt_eval(t) }
     bench("testview2 file template" , TIMES) { Nolatep.nlt(:testview2) }
-    t = nlt_parse(TEMPLATE)              ; bench("big template", TIMES) { @x = 1; nlt_eval(t, :x => 1) }
+    t = nlt_parse(TEMPLATE)              ; bench("big template (#{TEMPLATE.length} bytes)", TIMES) { @x = 1; nlt_eval(t, :x => 1) }
 end
