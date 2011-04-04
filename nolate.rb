@@ -52,7 +52,7 @@ def nlt(viewname,sub={})
         if !File.exists?(filename)
             raise "NOLATE error: no template at #{filename}"
         end
-        $nlt_templates[viewname] = File.open(filename).read
+        $nlt_templates[viewname] = File.read(filename)
     end
     nolate($nlt_templates[viewname],sub)
 end
