@@ -4,7 +4,7 @@ load 'nolate.rb'
 class MyExampleClass
     def foo
         @x = "Hello"
-        nolate("<%= @x =>")
+        nolate("<%= @x %>")
     end
 end
 
