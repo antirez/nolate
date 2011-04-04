@@ -1,8 +1,9 @@
 require 'test/unit'
 load 'nolate.rb'
 
+
 class MyExampleClass
-    def method_one 
+    def method_one
         @x = "Hello"
         nolate("<%= @x %>")
     end

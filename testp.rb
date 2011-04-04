@@ -1,9 +1,6 @@
 require 'test/unit'
 load 'nolatep.rb'
-
-class Object
-  include Nolatep
-end
+class Object; include Nolatep; end
 
 class MyExampleClass
     def method_one
