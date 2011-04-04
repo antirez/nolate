@@ -2,9 +2,14 @@ require 'test/unit'
 load 'nolate.rb'
 
 class MyExampleClass
-    def foo
+    def method_one 
         @x = "Hello"
         nolate("<%= @x %>")
+    end
+
+    def method_two
+        @x = "World"
+        nlt(:testview3)
     end
 end
 
@@ -20,6 +25,7 @@ class NolateTest < Test::Unit::TestCase
         assert_equal(nlt(:testview2),"<html>\n<body>\n4\n</body>\n</html>\n")
         assert_equal(nolate("<% foo %>"),"<% foo %>")
         assert_equal(nolate("<%%x=2%><%=x+1%>"),"3")
-        assert_equal(MyExampleClass.new.foo,"Hello")
+        assert_equal(MyExampleClass.new.method_one,"Hello")
+        assert_equal(MyExampleClass.new.method_two,"World\n")
     end
 end
