@@ -1,0 +1,6 @@
+Header
+<%#content%>
+<%=
+nolate("nested call")
+%>
+Footer
