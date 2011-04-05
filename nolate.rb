@@ -31,16 +31,16 @@
 #
 
 def nlt_empty_binding(sub)
-    __sub_ = sub
+    __sub = sub
     return binding()
 end
 
 def nlt_templates
-    @templates ||= {}
+    $templates ||= {}
 end
 
 def nlt_flush_templates
-    @templates = {}
+    $templates = {}
 end
 
 def nlt_parse(str)
@@ -67,7 +67,7 @@ def nlt_compile(template,sub)
         case action
             when :evalo then s << "__<<(#{param}).to_s\n"
             when :eval  then s << "#{param}\n"
-            when :sub   then s << "__<< __sub_[#{param.to_sym.inspect}]\n"
+            when :sub   then s << "__<< __sub[#{param.to_sym.inspect}]\n"
             else             s << "__<<#{action}\n"
         end
     end
