@@ -1,0 +1,37 @@
+<html>
+<head>
+<title>
+Test <%#title%>
+</title>
+<body>
+
+<h1>List of items<h1>
+<% (0..5).each{|x| %>
+<li><%=x%></li>
+<% } %>
+
+<p>
+You can access the substitutions hash from Ruby code inside the template
+using the __sub variable name:
+
+:title is set to -> <%= __sub[:title].inspect %>
+</p>
+
+<p>
+Another way to pass values to the template is via instance variables that
+are accessible without any special convention:
+
+@ivar is set to <%= @ivar.inspect %>
+</p>
+
+<p>
+Example of conditional:
+<% if false %>
+Ruby is lame
+<% else %>
+Ruby is a cool programming language
+<% end %>
+</p>
+
+</body>
+</html>
