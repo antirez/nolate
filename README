@@ -76,7 +76,7 @@ USING LAYOUTS
 Nolate suppots the concept of layout. You can specify to use a layout using
 the following call:
 
-    nolate_set_layout(:layout)
+    nlt_set_layout(:layout)
 
 The above call specifies to use "views/layout.nlt" as template.
 
