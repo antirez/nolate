@@ -30,8 +30,8 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 
-def nlt_empty_binding(sub)
-    __sub = sub
+def nlt_empty_binding(__sub_)
+    __sub = __sub_
     return binding()
 end
 
