@@ -36,5 +36,5 @@ bench("small constant template" , TIMES) { nolate("nosub") }
 bench("simple substitution"     , TIMES) { nolate("simple <%= 'sub' %>") }
 bench("hash substitution"       , TIMES) { nolate("hash sub <%#x%>") }
 bench("testview2 file template" , TIMES) { nlt(:testview2) }
-bench("big template .nlt", TIMES) { @x = 1; nlt(:bigtemplate, :x => 1) }
-bench("big template (#{TEMPLATE.length} bytes)", TIMES) { @x = 1; nolate(TEMPLATE, :x => 1) }
+bench("big template .nlt", TIMES/5) { @x = 1; nlt(:bigtemplate, :x => 1) }
+bench("big template (#{TEMPLATE.length} bytes)", TIMES/10) { @x = 1; nolate(TEMPLATE, :x => 1) }
