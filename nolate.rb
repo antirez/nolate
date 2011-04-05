@@ -36,11 +36,15 @@ def nlt_empty_binding(__sub_)
 end
 
 def nlt_templates
-    $templates ||= {}
+    $nolate_templates ||= {}
 end
 
 def nlt_flush_templates
-    $templates = {}
+    $nolate_templates = {}
+end
+
+def nlt_set_layout(layout)
+    $nolate_layout = layout
 end
 
 def nlt_parse(str)
@@ -83,7 +87,14 @@ def nlt_compile(template,sub)
 end
 
 def nlt_eval(code, sub = {})
-    eval(code, nlt_empty_binding(sub), __FILE__, __LINE__)
+    content = eval(code, nlt_empty_binding(sub), __FILE__, __LINE__)
+    if $nolate_layout
+        saved = $nolate_layout
+        $nolate_layout = nil
+        content = nlt(saved,{:content => content})
+        $nolate_layout = saved
+    end
+    content
 end
 
 def nlt(viewname, sub={})
@@ -92,7 +103,7 @@ def nlt(viewname, sub={})
         filename = "views/#{viewname}"
         raise "NOLATE error: no template at #{filename}" \
             unless File.exists?(filename)
-        nlt_templates[viewname] = nlt_compile(File.read(filename).chomp,sub)
+        nlt_templates[viewname] = nlt_compile(File.read(filename),sub)
     end
     nlt_eval(nlt_templates[viewname], sub)
 end

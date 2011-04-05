@@ -24,7 +24,7 @@ Surprisingly this is not as common as it should be.
 HOW TO USE IT?
 --------------
 
-Nolate consists of just three functions. The first is nolate() that is the core
+Nolate consists of just a few functions. The first is nolate() that is the core
 of the template system:
 
     nolate("The sum is <%= 2+2 %> Also substitute <%#myfield%> ok",
@@ -69,6 +69,27 @@ following example:
 <% (0..5).each{|x| %>
 <li><%=x%></li>
 <% } %>
+
+USING LAYOUTS
+-------------
+
+Nolate suppots the concept of layout. You can specify to use a layout using
+the following call:
+
+    nolate_set_layout(:layout)
+
+The above call specifies to use "views/layout.nlt" as template.
+
+The layout is a normal nolate template that contains somewhere a
+substitution in the form of: <%#content%>. When a layout is set what happens
+is that all the calls to nolate() or nlt() are processed, then the result
+is substituted to the layout template.
+
+The layout template can also include any other standard nolate substitution
+and code evaluation.
+
+It is possible to change layout at runtime, or to disable the layout setting
+it to nil.
 
 CONTRIBUTE
 ----------
