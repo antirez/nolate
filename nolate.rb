@@ -52,6 +52,7 @@ def nlt_parse(str)
     prev_was_eval = false # Previous token was an :eval?
     str.split(/<%(.*?)%>/m).map do |s|
         i, first_char = i + 1, s[0..0]
+        newlines = s.count("\n")
         if i % 2 == 0
             j = 0
             if prev_was_eval and s != "\n" and s != "\r\n"
@@ -59,38 +60,39 @@ def nlt_parse(str)
                 j += 1 if s[j..j] == "\n"
             end
             prev_was_eval = false
-            [s[j..-1].inspect]
+            [:verb, s[j..-1].inspect, newlines]
         elsif first_char == "="
             prev_was_eval = false
-            [:evalo, s[1..-1]]
+            [:evalo, s[1..-1], newlines]
         elsif first_char == "#"
             prev_was_eval = false
-            [:sub,   s[1..-1].to_sym]
+            [:sub,   s[1..-1].to_sym, newlines]
         else
             prev_was_eval = true
-            [:eval,  s]
+            [:eval,  s, 0]
         end
     end
 end
 
-def nlt_compile(template,sub)
-    s = "__=[]\n"
-    nlt_parse(template).each do |action, param|
+def nlt_compile(template)
+    s = "__=[]; "
+    nlt_parse(template).each do |action, param, newlines|
         case action
-            when :evalo then s << "__<<(#{param}).to_s\n"
-            when :eval  then s << "#{param}\n"
-            when :sub   then s << "__<< __sub[#{param.to_sym.inspect}]\n"
-            else             s << "__<<#{action}\n"
+            when :evalo then s << "__<<(#{param}).to_s; "
+            when :eval  then s << "#{param}; "
+            when :sub   then s << "__<< __sub[#{param.to_sym.inspect}]; "
+            when :verb  then s << "__<<#{param}; "
         end
+        s << "\n"*newlines
     end
-    s << "__.join"
+    s << "\n__.join"
 end
 
-def nlt_eval(code, sub = {})
+def nlt_eval(code, sub = {}, file="evaluated_string")
     # Make sure that nested calls will not substitute the layout
     saved = @nolate_no_layout
     @nolate_no_layout = true
-    content = eval(code, nlt_empty_binding(sub), __FILE__, __LINE__)
+    content = eval(code, nlt_empty_binding(sub), file, 1)
     @nolate_no_layout = saved
 
     # And... make sure that the layout will not trigger an infinite recursion
@@ -110,11 +112,11 @@ def nlt(viewname, sub={})
         filename = "views/#{viewname}"
         raise "NOLATE error: no template at #{filename}" \
             unless File.exists?(filename)
-        nlt_templates[viewname] = nlt_compile(File.read(filename),sub)
+        nlt_templates[viewname] = nlt_compile(File.read(filename))
     end
-    nlt_eval(nlt_templates[viewname], sub)
+    nlt_eval(nlt_templates[viewname], sub, "views/#{viewname}")
 end
 
 def nolate(str, sub={})
-    nlt_eval(nlt_compile(str,sub), sub)
+    nlt_eval(nlt_compile(str), sub)
 end

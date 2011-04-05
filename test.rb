@@ -44,4 +44,16 @@ OUTPUT
         nlt_set_layout(:layout2)
         assert_equal("Header\nciao\nnested call\nFooter\n",nolate("ciao"))
     end
+
+    def test_error_lines
+        # Make sure that compiled template and template have the code in the
+        # same lines, so that eval() will report good error traces.
+        text = File.read("views/testview5.nlt").to_a
+        compiled = nlt_compile(File.read("views/testview5.nlt")).split("\n")
+        assert(text[3] =~ /title/ && compiled[3] =~ /title/)
+        assert(text[8] =~ /each/ && compiled[8] =~ /each/)
+        assert(text[22] =~ /4\+4/ && compiled[22] =~ /4\+4/)
+        assert(text[29] =~ /ivar/ && compiled[29] =~ /ivar/)
+        assert(text[36] =~ /else/ && compiled[36] =~ /else/)
+    end
 end
