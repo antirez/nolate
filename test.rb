@@ -22,7 +22,7 @@ class NolateTest < Test::Unit::TestCase
         assert_equal("just eval",nolate("just ev<% 'sub' %>al"))
         assert_equal("test 4 view",nlt(:testview))
         assert_equal("test 4 view",nlt("testview.nlt"))
-        assert_equal("<html>\n<body>\n4</body>\n</html>",nlt(:testview2))
+        assert_equal("<html>\n<body>\n4\n</body>\n</html>",nlt(:testview2))
         assert_equal("3",nolate("<%x=2%><%=x+1%>"))
         assert_equal("Hello",MyExampleClass.new.method_one)
         assert_equal("World",MyExampleClass.new.method_two)

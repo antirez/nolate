@@ -45,18 +45,26 @@ end
 
 def nlt_parse(str)
     i = -1  # I wish I had map.with_index in 1.8 :(
+    prev_was_eval = false # Previous token was an :eval?
     str.split(/<%(.*?)%>/m).map do |s|
         i, first_char = i + 1, s[0..0]
-        if    i % 2 == 0
+        if i % 2 == 0
             j = 0
-            if s != "\n" and s != "\r\n"
+            if prev_was_eval and s != "\n" and s != "\r\n"
                 j += 1 if s[j..j] == "\r"
                 j += 1 if s[j..j] == "\n"
             end
+            prev_was_eval = false
             [s[j..-1].inspect]
-        elsif first_char == "=" then [:evalo, s[1..-1]]
-        elsif first_char == "#" then [:sub,   s[1..-1].to_sym]
-        else                         [:eval,  s]
+        elsif first_char == "="
+            prev_was_eval = false
+            [:evalo, s[1..-1]]
+        elsif first_char == "#"
+            prev_was_eval = false
+            [:sub,   s[1..-1].to_sym]
+        else
+            prev_was_eval = true
+            [:eval,  s]
         end
     end
 end
