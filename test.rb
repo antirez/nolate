@@ -1,5 +1,5 @@
 require 'test/unit'
-load 'nolate.rb'
+load 'lib/nolate.rb'
 
 class MyExampleClass
     def method_one

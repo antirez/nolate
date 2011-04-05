@@ -1,4 +1,4 @@
-load "nolate.rb"
+load "lib/nolate.rb"
 
 def bench(descr, times)
     start = Time.now.to_f
