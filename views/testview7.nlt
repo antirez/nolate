@@ -1,0 +1,6 @@
+zap
+<% #comment one
+x = 2+2
+#comment two %>
+<%= x %>
+ciao

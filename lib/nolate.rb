@@ -77,6 +77,15 @@ end
 def nlt_compile(template)
     s = "__=[]; "
     nlt_parse(template).each do |action, param, newlines|
+        if action == :evalo or action == :eval
+            if param[(-1..-1)] != "\n" and param.index("#")
+                lines = param.split("\n")
+                if lines[-1] =~ /^ *#/
+                    lines[-1] = ""
+                    param = lines.join("\n")
+                end
+            end
+        end
         case action
             when :evalo then s << "@__ = (#{param}); __<< @__.to_s; @__; "
             when :eval  then s << "#{param}; "

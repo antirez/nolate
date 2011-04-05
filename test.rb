@@ -27,6 +27,7 @@ class NolateTest < Test::Unit::TestCase
         assert_equal("Hello",MyExampleClass.new.method_one)
         assert_equal("World\n",MyExampleClass.new.method_two)
         assert_equal("\n1\n\n4\n\n9\n\n[1, 4, 9]\n",nlt(:testview6))
+        assert_equal("zap\n\n4\nciao\n",nlt(:testview7))
     end
 
     def test_iter
