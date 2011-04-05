@@ -87,8 +87,15 @@ def nlt_compile(template,sub)
 end
 
 def nlt_eval(code, sub = {})
+    # Make sure that nested calls will not substitute the layout
+    saved = @nolate_no_layout
+    @nolate_no_layout = true
     content = eval(code, nlt_empty_binding(sub), __FILE__, __LINE__)
-    if $nolate_layout
+    @nolate_no_layout = saved
+
+    # And... make sure that the layout will not trigger an infinite recursion
+    # substituting itself forever.
+    if $nolate_layout and !@nolate_no_layout
         saved = $nolate_layout
         $nolate_layout = nil
         content = nlt(saved,{:content => content})

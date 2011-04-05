@@ -41,5 +41,7 @@ OUTPUT
     def test_layout
         nlt_set_layout(:layout)
         assert_equal("Header\n2+2=4\nFooter\n",nolate("2+2=<%= 2+2 %>"))
+        nlt_set_layout(:layout2)
+        assert_equal("Header\nciao\nnested call\nFooter\n",nolate("ciao"))
     end
 end
