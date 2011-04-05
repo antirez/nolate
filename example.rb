@@ -1,4 +1,4 @@
-load 'nolate.rb'
+load 'lib/nolate.rb'
 
 hash = {:title => "Hello World!"}
 @ivar = "Instance Variable Content"
