@@ -78,10 +78,10 @@ def nlt_compile(template)
     s = "__=[]; "
     nlt_parse(template).each do |action, param, newlines|
         case action
-            when :evalo then s << "__<<(#{param}).to_s; "
+            when :evalo then s << "@__ = (#{param}); __<< @__.to_s; @__; "
             when :eval  then s << "#{param}; "
-            when :sub   then s << "__<< __sub[#{param.to_sym.inspect}]; "
-            when :verb  then s << "__<<#{param}; "
+            when :sub   then s << "__<< __sub[#{param.to_sym.inspect}]; @__; "
+            when :verb  then s << "__<<#{param}; @__; "
         end
         s << "\n"*newlines
     end
