@@ -16,7 +16,7 @@ class GemIt
         files
     end
     def gemspec
-        files = GemIt.new.list_files(".")
+        files = GemIt.new.list_files(".").sort
         version = File.read("VERSION").chomp
         gemspec = @template
         gemspec.sub!("%version%",version.inspect)
