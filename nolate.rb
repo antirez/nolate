@@ -88,7 +88,7 @@ def nlt_compile(template)
     s << "\n__.join"
 end
 
-def nlt_eval(code, sub = {}, file="evaluated_string")
+def nlt_eval(code, sub = {}, opt = {}, file="evaluated_string")
     # Make sure that nested calls will not substitute the layout
     saved = @nolate_no_layout
     @nolate_no_layout = true
@@ -97,16 +97,21 @@ def nlt_eval(code, sub = {}, file="evaluated_string")
 
     # And... make sure that the layout will not trigger an infinite recursion
     # substituting itself forever.
-    if $nolate_layout and !@nolate_no_layout
+    if $nolate_layout and !@nolate_no_layout and !(opt[:layout] == false)
         saved = $nolate_layout
+        if !opt[:layout]
+            use = $nolate_layout
+        else
+            use = opt[:layout]
+        end
         $nolate_layout = nil
-        content = nlt(saved,{:content => content})
+        content = nlt(use,{:content => content})
         $nolate_layout = saved
     end
     content
 end
 
-def nlt(viewname, sub={})
+def nlt(viewname, sub={}, opt={})
     viewname = "#{viewname}.nlt" if viewname.is_a?(Symbol)
     unless nlt_templates[viewname]
         filename = "views/#{viewname}"
@@ -114,9 +119,9 @@ def nlt(viewname, sub={})
             unless File.exists?(filename)
         nlt_templates[viewname] = nlt_compile(File.read(filename))
     end
-    nlt_eval(nlt_templates[viewname], sub, "views/#{viewname}")
+    nlt_eval(nlt_templates[viewname], sub, opt, "views/#{viewname}")
 end
 
-def nolate(str, sub={})
-    nlt_eval(nlt_compile(str), sub)
+def nolate(str, sub={}, opt={})
+    nlt_eval(nlt_compile(str), sub, opt)
 end
